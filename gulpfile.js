@@ -27,7 +27,7 @@ var config = {
 gulp.task("script", function() {
     return gulp.src(config.script.main)
         .pipe(plumber({
-            errorHandler: notify.onError("Error: <%= error.message =>"),
+            errorHandler: notify.onError("Error: <%= error.message %>"),
         }))
         .pipe(browserify({
             transform: [babelify, reactify],
