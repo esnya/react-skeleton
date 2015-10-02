@@ -1,3 +1,5 @@
+"use strict";
+
 jest.dontMock("../js/app.js");
 describe("App", function() {
     it("contains a test message", function () {
