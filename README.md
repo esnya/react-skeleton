@@ -1,6 +1,6 @@
-# React Skelton
+# React Skeleton
 
-Skelton files for web applications with React.js.
+Skeleton files for web applications with React.js.
 
 ## Features
 * Gulp task set
