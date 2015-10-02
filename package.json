@@ -1,0 +1,40 @@
+{
+  "name": "react-skeleton",
+  "version": "1.0.0",
+  "description": "App skelton with React.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ukatama/react-skeleton.git"
+  },
+  "author": "ukatama",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ukatama/react-skeleton/issues"
+  },
+  "homepage": "https://github.com/ukatama/react-skeleton#readme",
+  "devDependencies": {
+    "babel-jest": "*",
+    "babelify": "*",
+    "gulp": "*",
+    "gulp-browserify": "*",
+    "gulp-notify": "*",
+    "gulp-plumber": "*",
+    "gulp-webserver": "*",
+    "harmony": "*",
+    "jest-cli": "*",
+    "open": "*",
+    "react": "*",
+    "react-tools": "*",
+    "reactify": "*"
+  },
+  "jest": {
+    "scriptPreprocessor": "preprocessor.js",
+    "unmockedModulePathPatterns": [
+      "react"
+    ]
+  }
+}
