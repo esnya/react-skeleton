@@ -10,6 +10,7 @@ var babelify = require('babelify');
 var reactify = require('reactify');
 
 var jest = require('jest-cli');
+var through = require('through');
 var open = require('open');
 require('harmony')();
 
@@ -42,8 +43,16 @@ gulp.task('test', function(callback) {
             },
             __dirname,
             function(result) {
-                gulp.src('.').pipe(notify('Task <test> done!'));
-                console.log(result);
+                gulp.src('__tests__')
+                    .pipe(plumber({
+                        errorHandler: notify.onError('Task <test> failed!')
+                    }))
+                    .pipe(through(function () {
+                        if (!result) {
+                            this.emit('error', new Error('Test failed'));
+                        }
+                    }))
+                    .pipe(notify('Task <test> succeeded!'));
                 callback();
             });
 });

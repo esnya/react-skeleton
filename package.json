@@ -31,7 +31,8 @@
     "react-addons-test-utils": "*",
     "react-dom": "*",
     "react-tools": "*",
-    "reactify": "*"
+    "reactify": "*",
+    "through": "*"
   },
   "jest": {
     "scriptPreprocessor": "preprocessor.js",
