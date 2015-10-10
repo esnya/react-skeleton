@@ -8,7 +8,7 @@ var App = React.createClass({
 
     render: function() {
         return (
-                <div>React Skelton</div>
+                <div>React Skeleton</div>
                );
     },
 });
