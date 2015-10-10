@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 
-var App = React.createClass({
+let App = React.createClass({
     propTypes: {
     },
 
