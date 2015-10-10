@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import React, { PropTypes } from "react";
+import React, { PropTypes } from 'react';
 
 var App = React.createClass({
     propTypes: {
