@@ -28,13 +28,17 @@
     "jest-cli": "*",
     "open": "*",
     "react": "*",
+    "react-addons-test-utils": "*",
+    "react-dom": "*",
     "react-tools": "*",
     "reactify": "*"
   },
   "jest": {
     "scriptPreprocessor": "preprocessor.js",
     "unmockedModulePathPatterns": [
-      "react"
+      "react",
+      "react-dom",
+      "react-addons-test-utils"
     ]
   }
 }
