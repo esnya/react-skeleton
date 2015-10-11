@@ -31,7 +31,12 @@ gulp.task('script', function() {
             errorHandler: notify.onError('Error: <%= error.message %>'),
         }))
         .pipe(browserify({
-            transform: [babelify, reactify],
+            transform: [
+                babelify.configure({
+                    ignore: ['**/*/firebase*'],
+                }),
+                reactify,
+            ],
         }))
         .pipe(gulp.dest(config.dest))
         .pipe(notify('Task <script> done!'));
