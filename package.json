@@ -24,7 +24,7 @@
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.0.1",
     "gulp-webserver": "^0.9.1",
-    "harmony": "0.0.1",
+    "harmonize": "^1.4.4",
     "jest-cli": "^0.6.1",
     "open": "0.0.5",
     "react": "^0.14.1",

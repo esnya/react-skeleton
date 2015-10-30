@@ -12,7 +12,7 @@ var reactify = require('reactify');
 var jest = require('jest-cli');
 var through = require('through');
 var open = require('open');
-require('harmony')();
+require('harmonize')();
 
 var config = {
     dest: 'public',
