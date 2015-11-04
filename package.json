@@ -31,7 +31,6 @@
     "react-addons-test-utils": "^0.14.1",
     "react-dom": "^0.14.1",
     "react-tools": "^0.13.3",
-    "reactify": "^1.1.1",
     "through": "^2.3.8"
   },
   "jest": {

@@ -7,7 +7,6 @@ var plumber = require('gulp-plumber');
 var webserver = require('gulp-webserver');
 
 var babelify = require('babelify');
-var reactify = require('reactify');
 
 var jest = require('jest-cli');
 var through = require('through');
@@ -30,14 +29,7 @@ gulp.task('script', function() {
         .pipe(plumber({
             errorHandler: notify.onError('Error: <%= error.message %>'),
         }))
-        .pipe(browserify({
-            transform: [
-                babelify.configure({
-                    ignore: ['**/*/firebase*'],
-                }),
-                reactify,
-            ],
-        }))
+        .pipe(browserify({ transform: babelify }))
         .pipe(gulp.dest(config.dest))
         .pipe(notify('Task <script> done!'));
 });
