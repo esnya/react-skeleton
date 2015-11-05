@@ -5,7 +5,6 @@ var notify = require('gulp-notify');
 var webserver = require('gulp-webserver');
 
 var browserify = require('browserify');
-var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 
@@ -28,7 +27,7 @@ gulp.task('script', function() {
     var b = browserify({
         entries: 'js/script.js',
         debug: true,
-        transform: [babelify.configure({ presets: ['es2015', 'stage-2', 'react'] })],
+        transform: 'babelify',
     });
 
     return b.bundle()
