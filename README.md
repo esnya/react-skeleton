@@ -1,4 +1,4 @@
-# React Skeleton
+# React Skeleton [![Build Status](https://travis-ci.org/ukatama/react-skeleton.svg?branch=master)](https://travis-ci.org/ukatama/react-skeleton)
 
 Skeleton files for web applications with Babel and React.js.
 
