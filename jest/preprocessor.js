@@ -7,7 +7,7 @@ module.exports = {
         if (filename.indexOf('node_modules') === -1) {
             return babel.transform(src, {
                 filename: filename,
-                presets: ['es2015', 'react'],
+                presets: ['es2015', 'stage-2', 'react'],
             }).code;
         }
         return src;

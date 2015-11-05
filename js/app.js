@@ -7,8 +7,11 @@ let App = React.createClass({
     },
 
     render: function() {
+        let {
+            ...otherProps,
+        } = this.props;
         return (
-                <div>React Skeleton</div>
+                <div {...otherProps}>React Skeleton</div>
                );
     },
 });
