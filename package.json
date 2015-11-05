@@ -18,7 +18,7 @@
   "homepage": "https://github.com/ukatama/react-skeleton#readme",
   "devDependencies": {
     "babel-jest": "^5.3.0",
-    "babelify": "^7.0.2",
+    "babelify": "^7.2.0",
     "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
     "gulp-notify": "^2.2.0",
