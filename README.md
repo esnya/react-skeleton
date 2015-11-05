@@ -1,6 +1,6 @@
 # React Skeleton
 
-Skeleton files for web applications with React.js.
+Skeleton files for web applications with Babel and React.js.
 
 ## Features
 * Gulp task set
