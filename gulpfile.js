@@ -80,7 +80,7 @@ gulp.task('test', function(callback) {
                 .filter(r => !r.success)
                 .map(r => r.message)
                 .forEach(function (message) {
-                    var _message = message.replace(/\u001b\[[0-9]*m/g, '').sub(0, 1000);
+                    var _message = message.replace(/\u001b\[[0-9]*m/g, '').substr(0, 1000);
                     notify.onError('<%= error.message %>', function() {}).call(new Buffer(''), new Error(_message));
                 });
 
