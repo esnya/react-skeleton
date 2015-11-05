@@ -1,10 +1,15 @@
 "use strict";
 
-var BabelJest = require("babel-jest");
-var ReactTools = require("react-tools");
+var babel = require("babel-core");
 
 module.exports = {
-    process: function() {
-        return ReactTools.transform(BabelJest.process.apply(BabelJest, arguments));
+    process: function(src, filename) {
+        if (filename.indexOf('node_modules') === -1) {
+            return babel.transform(src, {
+                filename: filename,
+                presets: ['es2015', 'react'],
+            }).code;
+        }
+        return src;
     }
 };
