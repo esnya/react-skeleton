@@ -34,32 +34,60 @@ gulp.task('script', function() {
     });
 
     return b.bundle()
-        .on('error', notify.onError('<%= error.message %>'))
+        .on('error', notify.onError('[SCRIPT] <%= error.message %>'))
         .pipe(source('js/script.js'))
         .pipe(buffer())
         .pipe(gulp.dest(config.dest))
-        .pipe(notify('Task <script> done!'))
+        .pipe(notify('[SCRIPT] Generated: <%= file.relative %> '))
         ;
 });
 
 gulp.task('test', function(callback) {
-    jest.runCLI(
-            {
-            },
-            __dirname,
-            function(result) {
-                gulp.src('__tests__')
-                    .pipe(plumber({
-                        errorHandler: notify.onError('Task <test> failed!')
-                    }))
-                    .pipe(through(function () {
-                        if (!result) {
-                            this.emit('error', new Error('Test failed'));
-                        }
-                    }))
-                    .pipe(notify('Task <test> succeeded!'));
-                callback();
-            });
+    var _write = process.stdout.write;
+
+    try {
+
+        var output = '';
+        process.stdout.write = function(str) {
+            output += str;
+        };
+
+        jest.runCLI({ json: true, }, __dirname, function(success) {
+            process.stdout.write = _write;
+
+            var data = JSON.parse(output);
+
+            var endTime = data.testResults
+                .map(r => r.endTime)
+                .reduce(Math.max.bind(Math));
+
+            var result = `${data.numPassedTests} test passed (${data.numTotalTests} total in ${data.numTotalTestSuites}, run time ${(endTime - data.startTime) / 1000}s)`;
+            if (data.numFailedTests) result = `${data.numFailedTests} test failed, ${result}`;
+            result = `[TEST] ${result}`;
+
+            var logLevel = notify.logLevel();
+            notify.logLevel(0);
+            if (success) {
+                notify('<%= file.message %>', { onLast: false})
+                    ._transform({ message: result }, null, () => callback);
+            } else {
+                data.testResults
+                    .filter(r => !r.success)
+                    .map(r => r.message)
+                    .forEach(function (message) {
+                        var _message = message.replace(/\u001b\[[0-9]*m/g, '');
+                        notify.onError('<%= error.message %>', function() {}).call(new Buffer(''), new Error(_message));
+                    });
+
+                notify.onError('<%= error.message %>', () => callback()).call(new Buffer(''), new Error(result));
+            }
+            notify.logLevel(logLevel);
+        });
+    } catch (e) {
+        process.stdout.write = _write;
+        console.error(e);
+        callback();
+    }
 });
 
 gulp.task('watch:script', ['script'], function() {
