@@ -1,12 +1,14 @@
 'use strict';
 
 var gulp = require('gulp');
-var browserify = require('gulp-browserify');
 var notify = require('gulp-notify');
 var plumber = require('gulp-plumber');
 var webserver = require('gulp-webserver');
 
+var browserify = require('browserify');
 var babelify = require('babelify');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 
 var jest = require('jest-cli');
 var through = require('through');
@@ -25,13 +27,19 @@ var config = {
 };
 
 gulp.task('script', function() {
-    return gulp.src(config.script.main)
-        .pipe(plumber({
-            errorHandler: notify.onError('Error: <%= error.message %>'),
-        }))
-        .pipe(browserify({ transform: babelify }))
+    var b = browserify({
+        entries: 'js/script.js',
+        debug: true,
+        transform: [babelify.configure({ presets: ['es2015', 'react'] })],
+    });
+
+    return b.bundle()
+        .on('error', notify.onError('<%= error.message %>'))
+        .pipe(source('js/script.js'))
+        .pipe(buffer())
         .pipe(gulp.dest(config.dest))
-        .pipe(notify('Task <script> done!'));
+        .pipe(notify('Task <script> done!'))
+        ;
 });
 
 gulp.task('test', function(callback) {
