@@ -38,63 +38,67 @@ gulp.task('script', function() {
         .pipe(source('js/script.js'))
         .pipe(buffer())
         .pipe(gulp.dest(config.dest))
-        .pipe(notify('[SCRIPT] Generated: <%= file.relative %> '))
+        .pipe(notify('[SCRIPT] Generated script: <%= file.relative %> '))
         ;
 });
 
 gulp.task('test', function(callback) {
     var _write = process.stdout.write;
-
-    try {
-
-        var output = '';
-        process.stdout.write = function(str) {
+    var output = '';
+    process.stdout.write = function(str) {
+        if (str && str.match(/^{.*}$/)) {
             output += str;
-        };
+        } else {
+            _write.apply(this, arguments);
+        }
+    };
 
-        jest.runCLI({ json: true, }, __dirname, function(success) {
-            process.stdout.write = _write;
-
-            var data = JSON.parse(output);
-
-            var endTime = data.testResults
-                .map(r => r.endTime)
-                .reduce(Math.max.bind(Math));
-
-            var result = `${data.numPassedTests} test passed (${data.numTotalTests} total in ${data.numTotalTestSuites}, run time ${(endTime - data.startTime) / 1000}s)`;
-            if (data.numFailedTests) result = `${data.numFailedTests} test failed, ${result}`;
-            result = `[TEST] ${result}`;
-
-            var logLevel = notify.logLevel();
-            notify.logLevel(0);
-            if (success) {
-                notify('<%= file.message %>', { onLast: false})
-                    ._transform({ message: result }, null, () => callback);
-            } else {
-                data.testResults
-                    .filter(r => !r.success)
-                    .map(r => r.message)
-                    .forEach(function (message) {
-                        var _message = message.replace(/\u001b\[[0-9]*m/g, '');
-                        notify.onError('<%= error.message %>', function() {}).call(new Buffer(''), new Error(_message));
-                    });
-
-                notify.onError('<%= error.message %>', () => callback()).call(new Buffer(''), new Error(result));
-            }
-            notify.logLevel(logLevel);
-        });
-    } catch (e) {
+    jest.runCLI({ json: true, }, __dirname, function(success) {
         process.stdout.write = _write;
-        console.error(e);
-        callback();
-    }
+
+        var data;
+        try {
+            data = JSON.parse(output);
+        } catch (e) {
+            notify.onError('<%= error.message %>').call(new Buffer(''), e);
+            return callback();
+        }
+
+        var endTime = data.testResults
+            .map(r => r.endTime)
+            .reduce(Math.max.bind(Math));
+
+        var result = `${data.numPassedTests} test passed (${data.numTotalTests} total in ${data.numTotalTestSuites}, run time ${(endTime - data.startTime) / 1000}s)`;
+        if (data.numFailedTests) result = `${data.numFailedTests} test failed, ${result}`;
+        result = `[TEST] ${result}`;
+
+        var logLevel = notify.logLevel();
+        notify.logLevel(0);
+        if (success) {
+            notify('<%= file.message %>', { onLast: false})
+                ._transform({ message: result }, null, () => callback);
+        } else {
+            data.testResults
+                .filter(r => !r.success)
+                .map(r => r.message)
+                .forEach(function (message) {
+                    var _message = message.replace(/\u001b\[[0-9]*m/g, '');
+                    notify.onError('<%= error.message %>').call(new Buffer(''), new Error(_message));
+                });
+
+            notify.onError('<%= error.message %>').call(new Buffer(''), new Error(result));
+        }
+        notify.logLevel(logLevel);
+
+        return callback();
+    });
 });
 
 gulp.task('watch:script', ['script'], function() {
-    gulp.watch(config.script.path + '/**/*.js', ['script']);
+    return gulp.watch(config.script.path + '/**/*.js', ['script']);
 });
 gulp.task('watch:test', ['test'], function() {
-    gulp.watch([config.script.path + '/**/*.js', config.test.path + '/**/*.js'], ['test']);
+    return gulp.watch([config.script.path + '/**/*.js', config.test.path + '/**/*.js'], ['test']);
 });
 gulp.task('watch', ['watch:script', 'watch:test']);
 
