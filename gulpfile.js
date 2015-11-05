@@ -2,7 +2,6 @@
 
 var gulp = require('gulp');
 var notify = require('gulp-notify');
-var plumber = require('gulp-plumber');
 var webserver = require('gulp-webserver');
 
 var browserify = require('browserify');
@@ -11,7 +10,6 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 
 var jest = require('jest-cli');
-var through = require('through');
 var open = require('open');
 require('harmonize')();
 
