@@ -65,8 +65,9 @@ gulp.task('test', function(callback) {
         var endTime = data.testResults
             .map(r => r.endTime)
             .reduce(Math.max.bind(Math));
+        var time = (endTime - data.startTime) / 1000;
 
-        var result = `${data.numPassedTests} test passed (${data.numTotalTests} total in ${data.numTotalTestSuites}, run time ${(endTime - data.startTime) / 1000}s)`;
+        var result = `${data.numPassedTests} test passed (${data.numTotalTests} total in ${data.numTotalTestSuites}, run time ${time}s)`;
         if (data.numFailedTests) result = `${data.numFailedTests} test failed, ${result}`;
         result = `[TEST] ${result}`;
 
@@ -80,11 +81,11 @@ gulp.task('test', function(callback) {
                 .filter(r => !r.success)
                 .map(r => r.message)
                 .forEach(function (message) {
-                    var _message = message.replace(/\u001b\[[0-9]*m/g, '');
-                    notify.onError('<%= error.message %>').call(new Buffer(''), new Error(_message));
+                    var _message = message.replace(/\u001b\[[0-9]*m/g, '').sub(0, 1000);
+                    notify.onError('<%= error.message %>', function() {}).call(new Buffer(''), new Error(_message));
                 });
 
-            notify.onError('<%= error.message %>').call(new Buffer(''), new Error(result));
+            notify.onError('<%= error.message %>', function() {}).call(new Buffer(''), new Error(result));
         }
         notify.logLevel(logLevel);
 
