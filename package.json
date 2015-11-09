@@ -26,14 +26,17 @@
     "gulp": "^3.9.0",
     "gulp-notify": "^2.2.0",
     "gulp-webserver": "^0.9.1",
+    "gutil": "^1.6.4",
     "harmonize": "^1.4.4",
     "jest-cli": "^0.7.1",
+    "lodash.assign": "^3.2.0",
     "open": "0.0.5",
     "react": "^0.14.1",
     "react-addons-test-utils": "^0.14.1",
     "react-dom": "^0.14.1",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.6.0"
   },
   "jest": {
     "scriptPreprocessor": "jest/preprocessor.js",
