@@ -1,19 +1,26 @@
 'use strict';
 
+var assign = require('lodash.assign');
+var browserify = require('browserify');
+var buffer = require('vinyl-buffer');
 var gulp = require('gulp');
+var gutil = require('gutil');
+var jest = require('jest-cli');
 var notify = require('gulp-notify');
+var open = require('open');
+var source = require('vinyl-source-stream');
+var watchify = require('watchify');
 var webserver = require('gulp-webserver');
 
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-
-var jest = require('jest-cli');
-var open = require('open');
 require('harmonize')();
 
 var config = {
     dest: 'public',
+    browserify: {
+        entries: 'js/script.js',
+        debug: true,
+        transform: 'babelify',
+    },
     script: {
         path: 'js',
         main: 'js/script.js',
@@ -24,11 +31,7 @@ var config = {
 };
 
 gulp.task('script', function() {
-    var b = browserify({
-        entries: 'js/script.js',
-        debug: true,
-        transform: 'babelify',
-    });
+    var b = browserify(config.browserify);
 
     return b.bundle()
         .on('error', notify.onError('[SCRIPT] <%= error.message %>'))
@@ -92,9 +95,23 @@ gulp.task('test', function(callback) {
     });
 });
 
-gulp.task('watch:script', ['script'], function() {
-    return gulp.watch(config.script.path + '/**/*.js', ['script']);
-});
+var options = assign({}, watchify.args, config.browserify);
+var b = watchify(browserify(options));
+var bundle = function() {
+    return b.bundle()
+        .on('error', function(e) {
+            notify.onError.call(this, '[SCRIPT] <%= error.message %>');
+            gutil.log('Browserify Error', e);
+        })
+        .pipe(source('js/script.js'))
+        .pipe(buffer())
+        .pipe(gulp.dest(config.dest))
+        .pipe(notify('[SCRIPT] Generated script: <%= file.relative %> '));
+};
+b.on('update', bundle);
+b.on('log', gutil.log);
+gulp.task('watch:script', bundle);
+
 gulp.task('watch:test', ['test'], function() {
     return gulp.watch([config.script.path + '/**/*.js', config.test.path + '/**/*.js'], ['test']);
 });
