@@ -113,7 +113,7 @@ b.on('log', gutil.log);
 gulp.task('watch:script', bundle);
 
 gulp.task('watch:test', ['test'], function() {
-    return gulp.watch([config.script.path + '/**/*.js', config.test.path + '/**/*.js'], ['test']);
+    return gulp.watch('js/**/*', ['test']);
 });
 gulp.task('watch', ['watch:script', 'watch:test']);
 
