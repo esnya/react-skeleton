@@ -30,9 +30,7 @@ var config = {
     },
 };
 
-gulp.task('script', function() {
-    var b = browserify(config.browserify);
-
+var _bundle = function(b) {
     return b.bundle()
         .on('error', notify.onError('[SCRIPT] <%= error.message %>'))
         .pipe(source('js/script.js'))
@@ -40,6 +38,10 @@ gulp.task('script', function() {
         .pipe(gulp.dest(config.dest))
         .pipe(notify('[SCRIPT] Generated script: <%= file.relative %> '))
         ;
+};
+gulp.task('script', function() {
+    var b = browserify(config.browserify);
+    return _bundle(b);
 });
 
 gulp.task('test', function(callback) {
@@ -98,15 +100,7 @@ gulp.task('test', function(callback) {
 var options = assign({}, watchify.args, config.browserify);
 var b = watchify(browserify(options));
 var bundle = function() {
-    return b.bundle()
-        .on('error', function(e) {
-            notify.onError.call(this, '[SCRIPT] <%= error.message %>');
-            gutil.log('Browserify Error', e);
-        })
-        .pipe(source('js/script.js'))
-        .pipe(buffer())
-        .pipe(gulp.dest(config.dest))
-        .pipe(notify('[SCRIPT] Generated script: <%= file.relative %> '));
+    return _bundle(b);
 };
 b.on('update', bundle);
 b.on('log', gutil.log);
