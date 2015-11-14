@@ -17,7 +17,7 @@ require('harmonize')();
 var config = {
     dest: 'public',
     browserify: {
-        entries: 'js/script.js',
+        entries: 'js/index.js',
         debug: true,
         transform: 'babelify',
     },
